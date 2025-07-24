@@ -1,0 +1,6 @@
+fastapi
+pdfplumber
+pytesseract
+Pillow
+opencv-python-headless
+uvicorn
