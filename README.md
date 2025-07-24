@@ -1,68 +1,109 @@
-# FastAPI PDF Extractor
 
-This project is a FastAPI application that extracts text and images from PDF files. It utilizes `pdfplumber` for text extraction, `Pillow` or `OpenCV` for image processing, and `pytesseract` for Optical Character Recognition (OCR) on images.
+# PDF Converter FastAPI Backend
 
-## Features
+# This project extracts all text from a PDF, including:
+# - Selectable (normal) text
+# - Text inside embedded images (via OCR)
+# - Text visible on the page (via OCR on rendered pages)
 
-- Extracts normal text from PDF documents.
-- Detects and extracts images from PDF files.
-- Applies OCR to images to extract text.
+# ---
 
-## Project Structure
+# ## Features
 
-```
-fastapi-pdf-extractor
-├── src
-│   ├── main.py                # Entry point of the FastAPI application
-│   ├── pdf_processing         # Module for PDF processing
-│   │   ├── __init__.py        # Package initialization
-│   │   ├── extract_text.py     # Text extraction from PDF
-│   │   ├── extract_images.py    # Image extraction from PDF
-│   │   └── ocr.py             # OCR processing on images
-│   └── types                  # Custom types for the application
-│       └── index.py           # Type definitions
-├── requirements.txt           # Project dependencies
-└── README.md                  # Project documentation
-```
+# - **FastAPI** backend for PDF text extraction
+# - Uses `pdfplumber` for selectable text
+# - Uses `pytesseract` for OCR on images and full pages
+# - Uses `pdf2image` to render pages as images for OCR
+# - Removes duplicate lines in the final output
 
-## Installation
+# ---
 
-To set up the project, clone the repository and install the required dependencies:
+# ## Requirements
 
-```bash
-git clone <repository-url>
-cd fastapi-pdf-extractor
-pip install -r requirements.txt
-```
+# - Python 3.8+
+# - [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) (must be installed and in PATH)
+# - [Poppler for Windows](https://github.com/oschwartz10612/poppler-windows/releases/) (must be installed and in PATH)
 
-## Usage
+# ### Python dependencies
 
-To run the FastAPI application, execute the following command:
+# Install all dependencies with:
+# ```
+# pip install -r requirements.txt
+# ```
 
-```bash
-uvicorn src.main:app --reload
-```
+# Example `requirements.txt`:
+# ```
+# fastapi
+# uvicorn
+# pdfplumber
+# pillow
+# pytesseract
+# pdf2image
+# python-multipart
+# ```
 
-You can then access the API at `http://127.0.0.1:8000`.
+# ---
 
-## API Endpoints
+# ## Windows: Poppler & Tesseract Setup
 
-- **POST /extract**: Upload a PDF file to extract text and images.
-  - Request Body: Multipart form data with a file field named `file`.
-  - Response: JSON object containing extracted text and images.
+# 1. **Poppler**
+#    - Download from [Poppler Releases](https://github.com/oschwartz10612/poppler-windows/releases/)
+#    - Extract, add the `bin` folder to your system PATH (e.g. `C:\poppler\Library\bin` or `C:\poppler\bin`)
 
-## Dependencies
+# 2. **Tesseract**
+#    - Download from [Tesseract Releases](https://github.com/tesseract-ocr/tesseract)
+#    - Install, add the install folder (e.g. `C:\Program Files\Tesseract-OCR`) to your PATH
 
-This project requires the following Python packages:
+# 3. **Restart your terminal or VS Code** after changing PATH.
 
-- `fastapi`
-- `pdfplumber`
-- `pytesseract`
-- `Pillow`
-- `opencv-python` (if using OpenCV)
+# ---
 
-Make sure to have Tesseract OCR installed on your system for `pytesseract` to function properly.
+# ## How to Run the Project
 
-## License
+# 1. **Install dependencies**  
+#    ```
+#    pip install -r requirements.txt
+#    ```
 
-This project is licensed under the MIT License. See the LICENSE file for more details.
+# 2. **(Windows only) Make sure Poppler and Tesseract are installed and in your PATH.**
+
+# 3. **Start the FastAPI server**
+
+#    - From the `src` directory:
+#      ```
+#      cd src
+#      uvicorn main:app --reload
+#      ```
+#    - Or from the project root:
+#      ```
+#      uvicorn src.main:app --reload
+#      ```
+
+# 4. **Open your browser at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)**  
+#    Use the `/extract/` endpoint to upload a PDF and get all extracted text.
+
+# ---
+
+# ## Project Structure
+
+# ```
+# fastapi-pdf-extractor/
+# ├── src/
+# │   ├── main.py
+# │   └── pdf_processing/
+# │       ├── extract_text.py
+# │       ├── extract_images.py
+# │       └── ocr.py
+# ├── requirements.txt
+# └── README.md
+# ```
+
+# ---
+
+# ## Troubleshooting
+
+# - **Poppler not found:** Make sure Poppler's `bin` folder is in your PATH or pass `poppler_path` to `convert_from_path`.
+# - **Tesseract not found:** Make sure Tesseract is installed and in your PATH.
+# - **OCR accuracy:** Try increasing DPI in `convert_from_path`, and/or preprocess images (grayscale, thresholding).
+
+# ---
