@@ -7,6 +7,8 @@ import os
 from pdf2image import convert_from_path
 
 app = FastAPI()
+
+
 @app.post("/extract/")
 async def extract_from_pdf(file: UploadFile = File(...)):
     # Save uploaded PDF to disk
@@ -30,3 +32,4 @@ async def extract_from_pdf(file: UploadFile = File(...)):
     all_text = "\n".join(dict.fromkeys(all_text.splitlines()))
 
     return JSONResponse(content={"extracted_text": all_text})
+
